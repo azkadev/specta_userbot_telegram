@@ -25,6 +25,40 @@
 
 > **Specta Userbot Telegram** is a Powerful , ringan , _Pluggable_ Telegram UserBot dibuat dalam bahasa code _Dart_ menggunakan library [Telegram Client](https://github.com/azkadev/telegram_client).
 
+## run
+
+1. Clone repo first
+   ```bash
+   git clone https://github.com/azkadev/specta_userbot_telegram.git
+   cd specta_userbot_telegram
+   ```
+
+2. Run with Docker
+   ```bash
+   docker build . -t specta_userbot_Telegram
+   docker run -it azka
+   ```
+3. Run with dart
+   ```bash
+   dart pub get
+   dart run
+   ```
+
+4. run native exe
+    ```bash
+    dart pub get
+    dart compile exe ./bin/specta_*_telegram.dart -o ./index
+    chmod 777 ./index
+    ./index
+    ```
+
+
+
+jika belum ada library tdlib download dahulu
+```bash
+wget --quiet --show-progress -O ./libtdjson.so https://github.com/azkadev/telegram_client/releases/download/v2022.09.01.12.01.27/libtdjson.so.1.8.5
+```
+
 ### Support Host
 > semua platform yang sudah mendukung dart / docker / tidak keduanya
 

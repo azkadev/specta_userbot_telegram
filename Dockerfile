@@ -2,7 +2,7 @@ FROM ubuntu
 
 WORKDIR /app/
 
-ADD * /app/
+ADD ./ /app/
 
 RUN apt-get update
 
@@ -18,8 +18,6 @@ RUN apt-get update
 RUN apt-get install dart -y
 
 ## download tdlib
-
-RUN wget --quiet --show-progress -O libtdjson.so https://github.com/azkadev/telegram_client/releases/download/v2022.09.01.12.01.27/libtdjson.so.1.8.5
-
+RUN wget --quiet --show-progress -O ./libtdjson.so https://github.com/azkadev/telegram_client/releases/download/v2022.09.01.12.01.27/libtdjson.so.1.8.5
 
 CMD ["dart", "run"]
