@@ -17,14 +17,12 @@
     <b>Pluggable Telegram UserBot</b>
     <br>
 </p>
-
-
  
 
 # Specta Userbot Telegram 🔥
 
 > **Specta Userbot Telegram** is a Powerful , ringan , _Pluggable_ Telegram UserBot dibuat dalam bahasa code _Dart_ menggunakan library [Telegram Client](https://github.com/azkadev/telegram_client).
-
+---
 ## run
 
 1. Clone repo first
@@ -52,17 +50,26 @@
     ./index
     ```
 
-
-
 jika belum ada library tdlib download dahulu
 ```bash
 wget --quiet --show-progress -O ./libtdjson.so https://github.com/azkadev/telegram_client/releases/download/v2022.09.01.12.01.27/libtdjson.so.1.8.5
 ```
+---
 
 ### Support Host
 > semua platform yang sudah mendukung dart / docker / tidak keduanya
 
 ### Features
+
+1. [ ] Unlimited Client ( publish setelah stars 500 )
+2. [ ] .
+3. [ ] .
+4. [ ] .
+5. [ ] .
+6. [ ] .
+7. [ ] .
+8. [ ] .
+9. [ ] .
 
 ### Support & Diskusi 👥
 
