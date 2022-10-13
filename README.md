@@ -37,7 +37,7 @@
 2. Run with Docker
    ```bash
    docker build . -t specta_userbot_Telegram
-   docker run -it azka
+   docker run -it specta_userbot_Telegram
    ```
 3. Run with dart
    ```bash
