@@ -2,6 +2,7 @@
     <a href="https://github.com/azkadev">
         <img src="https://avatars.githubusercontent.com/u/82513502?v=4" alt="Specta">
     </a>
+    <br>
     <a href="https://youtube.com/c/galaxeus">
         <img
             src="https://raw.githubusercontent.com/azkadev/azkadev/main/assets/images/powered_galaxeus.png"
