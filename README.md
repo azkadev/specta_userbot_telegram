@@ -1,6 +1,6 @@
 <p align="center">
     <a href="https://github.com/azkadev">
-        <img src="https://avatars.githubusercontent.com/u/82513502?v=4" alt="Specta">
+        <img src="https://telegra.ph/file/e90bdeab8390b8c0d9df2.png" alt="Specta">
     </a>
     <br>
     <a href="https://youtube.com/c/galaxeus">
