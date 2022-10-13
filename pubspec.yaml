@@ -12,3 +12,6 @@ environment:
 dev_dependencies:
   lints: ^2.0.0
   test: ^1.16.0
+dependencies:
+  galaxeus_lib: ^0.0.14
+  telegram_client: ^0.3.55
