@@ -21,7 +21,7 @@
 
 # Specta Userbot Telegram 🔥
 
-> **Specta Userbot Telegram** Powerful , ringan , _Pluggable_ Telegram UserBot dibuat dalam bahasa code _Dart_ menggunakan library [Telegram Client](https://github.com/azkadev/telegram_client).
+> **Specta Userbot Telegram** Powerful , ringan , Telegram UserBot dibuat dalam bahasa code _Dart_ menggunakan library [Telegram Client](https://github.com/azkadev/telegram_client).
 
 ## Demo / Quick overview
 

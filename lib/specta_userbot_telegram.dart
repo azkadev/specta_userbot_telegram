@@ -44,8 +44,8 @@ Future<void> userbot({
   }
   String files_directory = p.join(userbot_path, "database");
   Map option = {
-    'api_id': api_id,
-    'api_hash': api_hash,
+    // 'api_id': api_id,
+    // 'api_hash': api_hash,
     "use_file_database": false,
     "use_chat_info_database": false,
     "use_message_database": false,
@@ -71,6 +71,9 @@ Future<void> userbot({
   Listener listener_event_invoke = tg.on(tg.event_invoke, (update) {
     if (update.raw.isEmpty) {
       return;
+    }
+    if (update.raw["@type"] == "error") {
+      print(update.raw);
     }
   });
 
@@ -120,7 +123,6 @@ Future<void> userbot({
           if (authStateType == "authorizationStateWaitPassword") {}
         }
       }
-
       List<String> updateOnly = ["updateNewMessage", "updateNewInlineQuery", "updateNewCallbackQuery", "updateNewInlineCallbackQuery"];
       if (updateOnly.contains(update.raw["@type"])) {
         Box dbBot = await Hive.openBox("${bot_user_id}", path: userbot_path_db);
@@ -130,10 +132,11 @@ Future<void> userbot({
             await updateInlineQuery(
               msg,
               update: update,
-              tg: tg,  
-              dbBot: dbBot, 
+              tg: tg,
+              dbBot: dbBot,
               option: option,
-              path: path, 
+              path: path,
+              pathDb: userbot_path_db,
               bot_user_id: bot_user_id,
             );
           }
@@ -145,10 +148,11 @@ Future<void> userbot({
             await updateCallbackQuery(
               msg,
               update: update,
-              tg: tg, 
-              dbBot: dbBot, 
+              tg: tg,
+              dbBot: dbBot,
               option: option,
-              path: path, 
+              path: path,
+              pathDb: userbot_path_db,
               bot_user_id: bot_user_id,
             );
           }
@@ -168,20 +172,15 @@ Future<void> userbot({
               try {
                 (msg["chat"] as Map).remove("last_message");
               } catch (e) {}
-
-              if (update.client_option["is_login_bot"] == false) {
-                if (msg["chat"]["type"] == "private") {
-                  await updateMsg(
-                    msg,
-                    update: update,
-                    tg: tg, 
-                    dbBot: dbBot,
-                    path: path,
-                    pathDb: userbot_path_db, 
-                    bot_user_id: bot_user_id,
-                  );
-                }
-              }
+              await updateMsg(
+                msg,
+                update: update,
+                tg: tg,
+                dbBot: dbBot,
+                path: path,
+                pathDb: userbot_path_db,
+                bot_user_id: bot_user_id,
+              );
             }
           }
         }

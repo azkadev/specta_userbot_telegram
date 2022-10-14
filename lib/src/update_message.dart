@@ -7,9 +7,9 @@ Future<dynamic> updateMsg(
   Map msg, {
   required String path,
   required UpdateTd update,
-  required Tdlib tg, 
-  required Box dbBot, 
-  required String pathDb, 
+  required Tdlib tg,
+  required Box dbBot,
+  required String pathDb,
   required int bot_user_id,
 }) async {
   if (msg["chat"]["type"] == "channel") {
@@ -245,7 +245,7 @@ Future<dynamic> updateMsg(
           String caption = parameters["caption"];
           if (caption.length >= 1024) {
             var messages = "";
-            
+
             List<String> messagesJson = splitByLength(caption, 1024);
             List result = [];
             for (var i = 0; i < messagesJson.length; i++) {
@@ -278,8 +278,26 @@ Future<dynamic> updateMsg(
           parameters: parameters,
           clientId: update.client_id,
         );
-      } 
+      }
 
+      if (msg["text"] is String && (msg["text"] as String).isNotEmpty) {
+        if (RegExp(r"^([!./])", caseSensitive: false).hasMatch(text)) {
+          String textCommand = text.replaceAll(RegExp(r"^([!./])([ ]+)?", caseSensitive: false), "");
+          if (textCommand.isNotEmpty) {
+            bool isCommandSpace = (textCommand.split(" ").length > 1);
+
+            if (RegExp(r"^ping$", caseSensitive: false).hasMatch(textCommand)) {
+              DateTime time = DateTime.fromMillisecondsSinceEpoch((msg["date"] * 1000));
+              parameters["text"] = "📣️ Pong\n${convertToAgoFromDateTime(time)}";
+              return await tg.request(
+                parameters["method"],
+                parameters: parameters,
+                clientId: update.client_id,
+              );
+            }
+          }
+        }
+      }
     } catch (e) {
       parameters["text"] = e.toString();
       return await tg.request(

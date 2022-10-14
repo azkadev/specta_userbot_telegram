@@ -9,6 +9,7 @@ Future<dynamic> updateInlineQuery(
   required Box dbBot, 
   required Map option,
   required String path, 
+  required String pathDb, 
   required int bot_user_id,
 }) async {
   var from_id = msg["from"]["id"];
