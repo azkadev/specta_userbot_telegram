@@ -37,6 +37,7 @@ Future<void> userbot({
   clientOption ??= {};
   pathTdlib ??= "./libtdjson.so";
   String userbot_path = p.join(path, "db_specta_userbot");
+  String userbot_path_db = p.join(userbot_path, "db");
   Directory userbot_dir = Directory(userbot_path);
   if (!userbot_dir.existsSync()) {
     userbot_dir.createSync(recursive: true);
@@ -78,6 +79,7 @@ Future<void> userbot({
       if (update.raw.isEmpty) {
         return;
       }
+      int bot_user_id = parserBotUserIdFromToken(update.client_option["token_bot"]);
 
       /// authorization update
       if (update.raw["@type"] == "updateAuthorizationState") {
@@ -118,6 +120,74 @@ Future<void> userbot({
           if (authStateType == "authorizationStateWaitPassword") {}
         }
       }
+
+      List<String> updateOnly = ["updateNewMessage", "updateNewInlineQuery", "updateNewCallbackQuery", "updateNewInlineCallbackQuery"];
+      if (updateOnly.contains(update.raw["@type"])) {
+        Box dbBot = await Hive.openBox("${bot_user_id}", path: userbot_path_db);
+        if (update.raw["@type"] == "updateNewInlineQuery") {
+          Map? msg = await apiUpdateInlineQuery(update, tg: tg);
+          if (msg != null && msg.isNotEmpty) {
+            await updateInlineQuery(
+              msg,
+              update: update,
+              tg: tg,  
+              dbBot: dbBot, 
+              option: option,
+              path: path, 
+              bot_user_id: bot_user_id,
+            );
+          }
+        }
+
+        if (update.raw["@type"] == "updateNewCallbackQuery" || update.raw["@type"] == "updateNewInlineCallbackQuery") {
+          Map? msg = await apiUpdateCallbackQuery(update, tg: tg);
+          if (msg != null && msg.isNotEmpty) {
+            await updateCallbackQuery(
+              msg,
+              update: update,
+              tg: tg, 
+              dbBot: dbBot, 
+              option: option,
+              path: path, 
+              bot_user_id: bot_user_id,
+            );
+          }
+        }
+
+        if (update.raw["@type"] == "updateNewMessage") {
+          var message = update.raw["message"];
+          if (message["@type"] == "message") {
+            Map? msg = await apiUpdateMsg(message, update: update, tg: tg);
+            if (msg != null) {
+              try {
+                (msg).remove("last_message");
+              } catch (e) {}
+              try {
+                (msg["from"] as Map).remove("last_message");
+              } catch (e) {}
+              try {
+                (msg["chat"] as Map).remove("last_message");
+              } catch (e) {}
+
+              if (update.client_option["is_login_bot"] == false) {
+                if (msg["chat"]["type"] == "private") {
+                  await updateMsg(
+                    msg,
+                    update: update,
+                    tg: tg, 
+                    dbBot: dbBot,
+                    path: path,
+                    pathDb: userbot_path_db, 
+                    bot_user_id: bot_user_id,
+                  );
+                }
+              }
+            }
+          }
+        }
+      }
+
+      return;
     } catch (e) {
       print(e);
     }

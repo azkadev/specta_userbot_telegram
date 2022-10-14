@@ -4,15 +4,10 @@ part of specta_userbot_telegram;
 Future<dynamic> updateCallbackQuery(
   Map msg, {
   required UpdateTd update,
-  required Tdlib tg,
-  required Box db,
-  required Box dbBot,
-  required List user_ids,
-  required String pathDb,
+  required Tdlib tg, 
+  required Box dbBot, 
   required Map option,
-  required String path,
-  required List skip_bot_user_ids,
-  required List<Map<String, dynamic>> types,
+  required String path, 
   required int bot_user_id,
 }) async {
   var cb = msg;
@@ -42,6 +37,6 @@ Future<dynamic> updateCallbackQuery(
       );
     }
 
-    Box dbUser = await Hive.openBox("user_${from_id}", path: pathDb);
+    Box dbUser = await Hive.openBox("user_${from_id}", path: path);
   }
 }

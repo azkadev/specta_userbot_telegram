@@ -7,13 +7,9 @@ Future<dynamic> updateMsg(
   Map msg, {
   required String path,
   required UpdateTd update,
-  required Tdlib tg,
-  required Box db,
-  required Box dbBot,
-  required List user_ids,
-  required String pathDb,
-  required List skip_bot_user_ids,
-  required List<Map<String, dynamic>> types,
+  required Tdlib tg, 
+  required Box dbBot, 
+  required String pathDb, 
   required int bot_user_id,
 }) async {
   if (msg["chat"]["type"] == "channel") {
