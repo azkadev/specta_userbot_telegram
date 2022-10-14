@@ -65,6 +65,7 @@ Future<void> userbot({
       if (update.raw.isEmpty) {
         return;
       }
+      /// authorization update
       if (update.raw["@type"] == "updateAuthorizationState") {
         if (update.raw["authorization_state"] is Map) {
           var authStateType = update.raw["authorization_state"]["@type"];

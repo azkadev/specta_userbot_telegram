@@ -127,6 +127,20 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "3.0.0"
+  galaxeus:
+    dependency: "direct main"
+    description:
+      name: galaxeus
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.3"
+  galaxeus_core_apis:
+    dependency: transitive
+    description:
+      name: galaxeus_core_apis
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.3"
   galaxeus_lib:
     dependency: "direct main"
     description:

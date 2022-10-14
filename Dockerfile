@@ -20,4 +20,8 @@ RUN apt-get install dart -y
 ## download tdlib
 RUN wget --quiet --show-progress -O ./libtdjson.so https://github.com/azkadev/telegram_client/releases/download/v2022.10.13.02.09.21/libtdjson.so.1.8.7
 
-CMD ["dart", "run"]
+## compile to exe
+RUN dart pub get
+RUN dart compile exe ./bin/specta_paas.dart -o ./index
+
+CMD ["./index"]
