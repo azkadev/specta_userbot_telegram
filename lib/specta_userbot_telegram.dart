@@ -1,4 +1,4 @@
-// ignore_for_file: unnecessary_brace_in_string_interps, non_constant_identifier_names
+// ignore_for_file: unnecessary_brace_in_string_interps, non_constant_identifier_names, unused_local_variable
 
 library specta_userbot_telegram;
 
@@ -19,7 +19,7 @@ Future<void> userbot({
   int? log_chat_id,
   required String token_bot,
   required WebSocketClient webSocketClient,
-  EventEmitter? eventEmitter,
+  required EventEmitter eventEmitter,
   String event_invoke = "invoke",
   String event_update = "update",
 }) async {
@@ -57,14 +57,18 @@ Future<void> userbot({
     event_invoke: event_invoke,
     event_update: event_update,
   );
-  tg.on(tg.event_invoke, (update) {
-    print(update.raw);
+  Listener listener_event_invoke = tg.on(tg.event_invoke, (update) {
+    if (update.raw.isEmpty) {
+      return;
+    }
   });
-  tg.on(tg.event_update, (UpdateTd update) async {
+
+  Listener listener_event_update = tg.on(tg.event_update, (UpdateTd update) async {
     try {
       if (update.raw.isEmpty) {
         return;
       }
+
       /// authorization update
       if (update.raw["@type"] == "updateAuthorizationState") {
         if (update.raw["authorization_state"] is Map) {
@@ -105,7 +109,7 @@ Future<void> userbot({
         }
       }
 
-      print(update.raw);
+      
     } catch (e) {
       print(e);
     }

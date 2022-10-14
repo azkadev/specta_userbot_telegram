@@ -31,6 +31,7 @@ void main(List<String> args) async {
           return;
         }
         String method = (update["@type"] as String);
+        print(method);
       }
     } catch (e) {
       print(e);
