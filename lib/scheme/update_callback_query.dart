@@ -1,3 +1,5 @@
+// ignore_for_file: empty_catches
+
 part of specta_userbot_telegram;
 
 Future<Map?> apiUpdateCallbackQuery(UpdateTd update, {required Tdlib tg}) async {
@@ -55,6 +57,9 @@ Future<Map?> apiUpdateCallbackQuery(UpdateTd update, {required Tdlib tg}) async 
       }
     } catch (e) {}
     msg["message_id"] = update.raw["message_id"];
+    try {
+      msg["api_message_id"] = tg.getMessageId(update.raw["message_id"], true);
+    } catch (e) {}
     msg["from"] = from;
     msg["chat"] = chat;
   }

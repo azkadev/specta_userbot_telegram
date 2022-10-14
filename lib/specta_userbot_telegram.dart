@@ -44,8 +44,8 @@ Future<void> userbot({
   }
   String files_directory = p.join(userbot_path, "database");
   Map option = {
-    // 'api_id': api_id,
-    // 'api_hash': api_hash,
+    'api_id': api_id,
+    'api_hash': api_hash,
     "use_file_database": false,
     "use_chat_info_database": false,
     "use_message_database": false,

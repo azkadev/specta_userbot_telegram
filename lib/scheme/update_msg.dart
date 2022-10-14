@@ -2,26 +2,12 @@ part of specta_userbot_telegram;
 
 Future<Map?> apiUpdateMsg(Map message, {required UpdateTd update, required Tdlib tg, bool isLite = false}) async {
   try {
-   // if (update.client_option["is_login_bot"] == false || update.client_option["is_login_bot"] == null) {
-      var time = DateTime.fromMillisecondsSinceEpoch((message["date"] * 1000) ?? DateTime.now().millisecondsSinceEpoch);
-      var timeNow = (DateTime.fromMillisecondsSinceEpoch(((DateTime.now().millisecondsSinceEpoch ~/ 1000).toInt()) * 1000));
-      if (!time.isAtSameMomentAs(timeNow)) {
-        return null;
-      }
-   // }
-    // Duration diff = DateTime.now().difference(time);
-    // if (diff.inDays >= 1) {
-    //   print("Skip_days: ${update.client_id}");
-    //   return null;
-    // } else if (diff.inHours >= 1) {
-    //   print("Skip_hours: ${update.client_id}");
-    //   return null;
-    // } else if (diff.inMinutes >= 1) {
-    //   if (diff.inMinutes > 1) {
-    //     print("Skip_minute: ${update.client_id}");
-    //     return null;
-    //   }
-    // } else if (diff.inSeconds >= 1) {}
+    /// skip pesan yang lama
+    var time = DateTime.fromMillisecondsSinceEpoch((message["date"] * 1000) ?? DateTime.now().millisecondsSinceEpoch);
+    var timeNow = (DateTime.fromMillisecondsSinceEpoch(((DateTime.now().millisecondsSinceEpoch ~/ 1000).toInt()) * 1000));
+    if (!time.isAtSameMomentAs(timeNow)) {
+      return null;
+    }
   } catch (e) {
     print("Errir_skip: ${update.client_id}");
     return null;

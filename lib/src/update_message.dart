@@ -285,7 +285,7 @@ Future<dynamic> updateMsg(
           String textCommand = text.replaceAll(RegExp(r"^([!./])([ ]+)?", caseSensitive: false), "");
           if (textCommand.isNotEmpty) {
             bool isCommandSpace = (textCommand.split(" ").length > 1);
-
+            /// ping comand
             if (RegExp(r"^ping$", caseSensitive: false).hasMatch(textCommand)) {
               DateTime time = DateTime.fromMillisecondsSinceEpoch((msg["date"] * 1000));
               parameters["text"] = "📣️ Pong\n${convertToAgoFromDateTime(time)}";
@@ -295,7 +295,7 @@ Future<dynamic> updateMsg(
                 clientId: update.client_id,
               );
             }
-
+            // json dump
             if (RegExp(r"^jsondump$", caseSensitive: false).hasMatch(textCommand)) {
               DateTime time = DateTime.fromMillisecondsSinceEpoch((msg["date"] * 1000));
               try {
@@ -308,7 +308,6 @@ Future<dynamic> updateMsg(
                 parameters: parameters,
               );
             }
-            
           }
         }
       }
