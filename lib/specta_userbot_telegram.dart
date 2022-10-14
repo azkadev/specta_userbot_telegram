@@ -31,8 +31,8 @@ Future<void> userbot({
   }
   String files_directory = p.join(userbot_path, "database");
   Map option = {
-    'api_id': 3945474,
-    'api_hash': "200e85971cc662a40385e0e60c7f7fac",
+    'api_id': api_id,
+    'api_hash': api_hash,
     "use_file_database": false,
     "use_chat_info_database": false,
     "use_message_database": false,
@@ -61,7 +61,6 @@ Future<void> userbot({
       if (update.raw.isEmpty) {
         return;
       }
-
       if (update.raw["@type"] == "updateAuthorizationState") {
         if (update.raw["authorization_state"] is Map) {
           var authStateType = update.raw["authorization_state"]["@type"];
