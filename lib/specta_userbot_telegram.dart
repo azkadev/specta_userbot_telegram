@@ -2,11 +2,21 @@
 
 library specta_userbot_telegram;
 
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:galaxeus_lib/galaxeus_lib.dart';
+import 'package:hive/hive.dart';
 import 'package:telegram_client/telegram_client.dart';
 import 'package:path/path.dart' as p;
+
+part "scheme/update_callback_query.dart";
+part "scheme/update_inline_query.dart";
+part "scheme/update_msg.dart";
+
+part "src/update_callback_query.dart";
+part "src/update_inline_query.dart";
+part "src/update_message.dart";
 
 Future<void> userbot({
   required int api_id,
@@ -108,8 +118,6 @@ Future<void> userbot({
           if (authStateType == "authorizationStateWaitPassword") {}
         }
       }
-
-      
     } catch (e) {
       print(e);
     }
@@ -122,5 +130,44 @@ int parserBotUserIdFromToken(dynamic token_bot) {
     return int.parse(token_bot.split(":")[0]);
   } catch (e) {
     return 0;
+  }
+}
+
+List<String> splitByLength(String text, int length, {bool ignoreEmpty = false}) {
+  List<String> pieces = [];
+
+  for (int i = 0; i < text.length; i += length) {
+    int offset = i + length;
+    String piece = text.substring(i, offset >= text.length ? text.length : offset);
+
+    if (ignoreEmpty) {
+      piece = piece.replaceAll(RegExp(r'\s+'), '');
+    }
+
+    pieces.add(piece);
+  }
+  return pieces;
+}
+
+List prettyPrintJson(var input, {bool is_log = true}) {
+  try {
+    if (input is String) {
+    } else {
+      input = json.encode(input);
+    }
+    const JsonDecoder decoder = JsonDecoder();
+    const JsonEncoder encoder = JsonEncoder.withIndent('  ');
+    final dynamic object = decoder.convert(input);
+    final dynamic prettyString = encoder.convert(object);
+    List result = prettyString.split('\n');
+    if (is_log) {
+      for (var element in result) {
+        print(element);
+      }
+    }
+    return result;
+  } catch (e) {
+    print(e);
+    return ["error"];
   }
 }

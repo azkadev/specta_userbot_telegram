@@ -9,6 +9,8 @@ import 'package:path/path.dart' as p;
 
 void main(List<String> args) async {
   String path = p.join(Directory.current.path);
+
+  /// environment
   String username = Platform.environment["username"] ?? "admin";
   String password = Platform.environment["password"] ?? "azka123";
   String host_name = Platform.environment["HOST_API"] ?? "wss://specta-apis.up.railway.app/ws";
@@ -16,6 +18,7 @@ void main(List<String> args) async {
   String tg_api_hash = Platform.environment["tg_api_hash"] ?? "0";
   String tg_token_bot = Platform.environment["tg_token_bot"] ?? "0";
   int tg_owner_user_id = int.parse(Platform.environment["tg_owner_user_id"] ?? "0");
+
   String tg_event_invoke = "invoke";
   String tg_event_update = "update";
   EventEmitter eventEmitter = EventEmitter();
