@@ -6,3 +6,5 @@
 build/
 
 *.so
+
+db_specta_userbot/

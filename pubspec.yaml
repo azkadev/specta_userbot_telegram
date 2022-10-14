@@ -16,4 +16,4 @@ dev_dependencies:
 dependencies:
   galaxeus_lib: ^0.0.16
   path: ^1.8.2
-  telegram_client: ^0.3.55
+  telegram_client: ^0.3.56

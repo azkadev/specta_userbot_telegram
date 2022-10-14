@@ -8,15 +8,31 @@ import 'package:galaxeus_lib/galaxeus_lib.dart';
 import 'package:telegram_client/telegram_client.dart';
 import 'package:path/path.dart' as p;
 
-Future<void> userbot({required int api_id, required String api_hash, required String path, String? pathTdlib, String? databaseKey, required dynamic owner_chat_id, Map? clientOption, int? log_chat_id, required String token_bot}) async {
+Future<void> userbot({
+  required int api_id,
+  required String api_hash,
+  required String path,
+  String? pathTdlib,
+  String? databaseKey,
+  required dynamic owner_chat_id,
+  Map? clientOption,
+  int? log_chat_id,
+  required String token_bot,
+  required WebSocketClient webSocketClient,
+  EventEmitter? eventEmitter,
+}) async {
   databaseKey ??= "";
   clientOption ??= {};
   pathTdlib ??= "./libtdjson.so";
   String userbot_path = p.join(path, "db_specta_userbot");
+  Directory userbot_dir = Directory(userbot_path);
+  if (!userbot_dir.existsSync()) {
+    userbot_dir.createSync(recursive: true);
+  }
   String files_directory = p.join(userbot_path, "database");
   Map option = {
-    'api_id': api_id,
-    'api_hash': api_hash,
+    'api_id': 3945474,
+    'api_hash': "200e85971cc662a40385e0e60c7f7fac",
     "use_file_database": false,
     "use_chat_info_database": false,
     "use_message_database": false,
@@ -34,13 +50,57 @@ Future<void> userbot({required int api_id, required String api_hash, required St
   Tdlib tg = Tdlib(
     pathTdlib,
     clientOption: option,
-    count_request_loop: 50000,
     delayInvoke: Duration(milliseconds: 100),
+    eventEmitter: eventEmitter,
   );
-  tg.on("update", (UpdateTd update) {
+  tg.on(tg.event_invoke, (update) {
+    print(update.raw);
+  });
+  tg.on("update", (UpdateTd update) async {
     try {
       if (update.raw.isEmpty) {
         return;
+      }
+
+      if (update.raw["@type"] == "updateAuthorizationState") {
+        if (update.raw["authorization_state"] is Map) {
+          var authStateType = update.raw["authorization_state"]["@type"];
+          if (tg.client_id != update.client_id) {
+            update.client_option["database_key"] = databaseKey;
+            await tg.initClient(update, clientId: update.client_id, tdlibParameters: update.client_option, isVoid: true);
+          } else {
+            print("set_client");
+            print(update.client_option);
+            (await tg.initClient(update, clientId: update.client_id, tdlibParameters: update.client_option, isVoid: true));
+          }
+          if (authStateType == "authorizationStateLoggingOut") {}
+          if (authStateType == "authorizationStateClosed") {
+            print("close: ${update.client_id}");
+            tg.exitClient(update.client_id);
+          }
+          if (authStateType == "authorizationStateWaitPhoneNumber") {
+            print("wait number or token bot");
+            if (update.client_option["is_login_bot"] == true) {
+              await tg.request(
+                "checkAuthenticationBotToken",
+                parameters: {
+                  "token": update.client_option["token_bot"],
+                },
+                clientId: update.client_id,
+              );
+            } else {
+              await tg.request(
+                "requestQrCodeAuthentication",
+                parameters: {
+                  "other_user_ids": [],
+                },
+                clientId: update.client_id,
+              );
+            }
+          }
+          if (authStateType == "authorizationStateWaitCode") {}
+          if (authStateType == "authorizationStateWaitPassword") {}
+        }
       }
 
       print(update.raw);

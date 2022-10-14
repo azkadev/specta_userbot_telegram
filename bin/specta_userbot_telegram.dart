@@ -15,9 +15,14 @@ void main(List<String> args) async {
   int tg_api_id = int.parse(Platform.environment["tg_api_id"] ?? "0");
   String tg_api_hash = Platform.environment["tg_api_hash"] ?? "0";
   String tg_token_bot = Platform.environment["tg_token_bot"] ?? "0";
-  int tg_owner_user_id = int.parse(Platform.environment["tg_owner_user_id"] ?? "0");
-  WebSocketClient ws = WebSocketClient(host_name);
-  ws.on("update", (update) {
+  int tg_owner_user_id = int.parse(Platform.environment["tg_owner_user_id"] ?? "0"); 
+  EventEmitter eventEmitter = EventEmitter();
+  WebSocketClient ws = WebSocketClient(
+    host_name,
+    eventEmitter: eventEmitter,
+    eventNameUpdate: "socket_update"
+  );
+  ws.on(ws.event_name_update, (update) {
     try {
       if (update is Map) {
         if (update["@type"] is String == false) {
@@ -37,6 +42,19 @@ void main(List<String> args) async {
         } catch (e) {}
       }
     },
+    onDataConnection: (data) {
+      if (data["@type"] == "connection") {
+        print("Status: ${data["status"]}");
+      }
+    },
   );
-  userbot(api_id: tg_api_id, api_hash: tg_api_hash, path: path, owner_chat_id: tg_owner_user_id, token_bot: tg_token_bot);
+  await userbot(
+    api_id: tg_api_id,
+    api_hash: tg_api_hash,
+    path: path,
+    owner_chat_id: tg_owner_user_id,
+    token_bot: tg_token_bot,
+    webSocketClient: ws,
+    eventEmitter: eventEmitter,
+  );
 }
