@@ -18,21 +18,7 @@ part "src/update_callback_query.dart";
 part "src/update_inline_query.dart";
 part "src/update_message.dart";
 
-Future<void> userbot({
-  required int api_id,
-  required String api_hash,
-  required String path,
-  String? pathTdlib,
-  String? databaseKey,
-  required dynamic owner_chat_id,
-  Map? clientOption,
-  int? log_chat_id,
-  required String token_bot,
-  required WebSocketClient webSocketClient,
-  required EventEmitter eventEmitter,
-  String event_invoke = "invoke",
-  String event_update = "update",
-}) async {
+Future<void> userbot({required int api_id, required String api_hash, required String path, String? pathTdlib, String? databaseKey, required dynamic owner_chat_id, Map? clientOption, int? log_chat_id, required String token_bot, required WebSocketClient webSocketClient, required EventEmitter eventEmitter, String event_invoke = "invoke", String event_update = "update", required void Function(Tdlib tdlib) onInit}) async {
   databaseKey ??= "";
   clientOption ??= {};
   pathTdlib ??= "./libtdjson.so";
@@ -68,6 +54,7 @@ Future<void> userbot({
     event_invoke: event_invoke,
     event_update: event_update,
   );
+  onInit.call(tg);
   Listener listener_event_invoke = tg.on(tg.event_invoke, (update) {
     if (update.raw.isEmpty) {
       return;

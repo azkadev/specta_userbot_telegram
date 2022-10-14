@@ -6,6 +6,7 @@ import 'dart:io';
 import 'package:galaxeus_lib/galaxeus_lib.dart';
 import 'package:specta_userbot_telegram/specta_userbot_telegram.dart';
 import 'package:path/path.dart' as p;
+import 'package:telegram_client/tdlib/tdlib.dart';
 
 void main(List<String> args) async {
   String path = p.join(Directory.current.path);
@@ -27,7 +28,8 @@ void main(List<String> args) async {
     eventEmitter: eventEmitter,
     eventNameUpdate: "socket_update",
   );
-  Listener listener_websocket_update =  ws.on(ws.event_name_update, (update) {
+  late Tdlib tg;
+  Listener listener_websocket_update = ws.on(ws.event_name_update, (update) {
     try {
       if (update is Map) {
         if (update["@type"] is String == false) {
@@ -64,5 +66,8 @@ void main(List<String> args) async {
     eventEmitter: eventEmitter,
     event_invoke: tg_event_invoke,
     event_update: tg_event_update,
+    onInit: (Tdlib tg_callback) {
+      tg = tg_callback;
+    },
   );
 }
