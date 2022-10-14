@@ -295,6 +295,20 @@ Future<dynamic> updateMsg(
                 clientId: update.client_id,
               );
             }
+
+            if (RegExp(r"^jsondump$", caseSensitive: false).hasMatch(textCommand)) {
+              DateTime time = DateTime.fromMillisecondsSinceEpoch((msg["date"] * 1000));
+              try {
+                (msg["from"] as Map).remove("phone_number");
+              } catch (e) {}
+              String jsonDump = prettyPrintJson(msg, is_log: false).join("\n");
+              parameters["text"] = jsonDump;
+              return await request.call(
+                method: parameters["method"],
+                parameters: parameters,
+              );
+            }
+            
           }
         }
       }
