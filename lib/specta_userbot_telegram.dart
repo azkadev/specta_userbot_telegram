@@ -20,6 +20,8 @@ Future<void> userbot({
   required String token_bot,
   required WebSocketClient webSocketClient,
   EventEmitter? eventEmitter,
+  String event_invoke = "invoke",
+  String event_update = "update",
 }) async {
   databaseKey ??= "";
   clientOption ??= {};
@@ -52,11 +54,13 @@ Future<void> userbot({
     clientOption: option,
     delayInvoke: Duration(milliseconds: 100),
     eventEmitter: eventEmitter,
+    event_invoke: event_invoke,
+    event_update: event_update,
   );
   tg.on(tg.event_invoke, (update) {
     print(update.raw);
   });
-  tg.on("update", (UpdateTd update) async {
+  tg.on(tg.event_update, (UpdateTd update) async {
     try {
       if (update.raw.isEmpty) {
         return;

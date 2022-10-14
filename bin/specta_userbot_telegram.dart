@@ -15,12 +15,14 @@ void main(List<String> args) async {
   int tg_api_id = int.parse(Platform.environment["tg_api_id"] ?? "0");
   String tg_api_hash = Platform.environment["tg_api_hash"] ?? "0";
   String tg_token_bot = Platform.environment["tg_token_bot"] ?? "0";
-  int tg_owner_user_id = int.parse(Platform.environment["tg_owner_user_id"] ?? "0"); 
+  int tg_owner_user_id = int.parse(Platform.environment["tg_owner_user_id"] ?? "0");
+  String tg_event_invoke = "invoke";
+  String tg_event_update = "update";
   EventEmitter eventEmitter = EventEmitter();
   WebSocketClient ws = WebSocketClient(
     host_name,
     eventEmitter: eventEmitter,
-    eventNameUpdate: "socket_update"
+    eventNameUpdate: "socket_update",
   );
   ws.on(ws.event_name_update, (update) {
     try {
@@ -56,5 +58,7 @@ void main(List<String> args) async {
     token_bot: tg_token_bot,
     webSocketClient: ws,
     eventEmitter: eventEmitter,
+    event_invoke: tg_event_invoke,
+    event_update: tg_event_update,
   );
 }
