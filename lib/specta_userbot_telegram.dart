@@ -72,9 +72,7 @@ Future<void> userbot({
             update.client_option["database_key"] = databaseKey;
             await tg.initClient(update, clientId: update.client_id, tdlibParameters: update.client_option, isVoid: true);
           } else {
-            print("set_client");
-            print(update.client_option);
-            (await tg.initClient(update, clientId: update.client_id, tdlibParameters: update.client_option, isVoid: true));
+            await tg.initClient(update, clientId: update.client_id, tdlibParameters: update.client_option, isVoid: true);
           }
           if (authStateType == "authorizationStateLoggingOut") {}
           if (authStateType == "authorizationStateClosed") {
