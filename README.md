@@ -61,7 +61,7 @@
 
 jika belum ada library tdlib download dahulu
 ```bash
-wget --quiet --show-progress -O ./libtdjson.so https://github.com/azkadev/telegram_client/releases/download/v2022.09.01.12.01.27/libtdjson.so.1.8.5
+wget --quiet --show-progress -O ./libtdjson.so https://github.com/azkadev/telegram_client/releases/download/v2022.10.13.02.09.21/libtdjson.so.1.8.7
 ```
 ---
 
