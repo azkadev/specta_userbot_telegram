@@ -24,13 +24,13 @@
 > **Specta Userbot Telegram** Powerful , ringan , Telegram UserBot dibuat dalam bahasa code _Dart_ menggunakan library [Telegram Client](https://github.com/azkadev/telegram_client).
 
 
-[![](https://img.shields.io/badge/specta_userbot_telegram-v0.7-darkgreen)](#)
+[![](https://img.shields.io/badge/specta_userbot_telegram-v0.0-darkgreen)](#)
 [![Stars](https://img.shields.io/github/stars/azkadev/specta_userbot_telegram?style=flat-square&color=yellow)](https://github.com/azkadev/specta_userbot_telegram/stargazers)
 [![Forks](https://img.shields.io/github/forks/azkadev/specta_userbot_telegram?style=flat-square&color=orange)](https://github.com/azkadev/specta_userbot_telegram/fork)
 [![Size](https://img.shields.io/github/repo-size/azkadev/specta_userbot_telegram?style=flat-square&color=green)](https://github.com/azkadev/specta_userbot_telegram/)  
 [![CodeFactor](https://www.codefactor.io/repository/github/azkadev/specta_userbot_telegram/badge/main)](https://www.codefactor.io/repository/github/azkadev/specta_userbot_telegram/overview/main)
 [![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://github.com/azkadev/specta_userbot_telegram/graphs/commit-activity)
-[![Docker Pulls](https://img.shields.io/docker/pulls/azkadev/specta_userbot_telegram?style=flat-square)](https://img.shields.io/docker/pulls/azkadev/specta_userbot_telegram?style=flat-square)   
+<!-- [![Docker Pulls](https://img.shields.io/docker/pulls/azkadev/specta_userbot_telegram?style=flat-square)](https://img.shields.io/docker/pulls/azkadev/specta_userbot_telegram?style=flat-square)    -->
 [![Open Source Love svg2](https://badges.frapsoft.com/os/v2/open-source.svg?v=103)](https://github.com/azkadev/specta_userbot_telegram)
 [![Contributors](https://img.shields.io/github/contributors/azkadev/specta_userbot_telegram?style=flat-square&color=green)](https://github.com/azkadev/specta_userbot_telegram/graphs/contributors)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](https://makeapullrequest.com)
