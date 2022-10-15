@@ -11,13 +11,9 @@ Future<dynamic> updateMsg(
   required DatabaseTg databaseTg,
   required String pathDb,
   required int bot_user_id,
+  required int current_user_id,
+  bool is_login_bot = false,
 }) async {
-  late bool is_login_bot = false;
-
-  if (update.client_option["is_login_bot"] == true) {
-    is_login_bot = update.client_option["is_login_bot"] as bool;
-  }
-
   String msg_caption = "";
   if (msg["text"] is String) {
     msg_caption = msg["text"];
@@ -49,7 +45,13 @@ Future<dynamic> updateMsg(
   int from_id = msg["from"]["id"];
   Map chat = msg["chat"];
   Map from = msg["from"];
-  int auto_chat_user_id = 0;
+  int auto_chat_user_id = bot_user_id;
+  Map auto_chat = {
+    "id": bot_user_id,
+    "first_name": "",
+    "type": "private",
+    "is_bot": true,
+  };
 
   if (tg.client_id != update.client_id) {
     if (isOutgoing) {
@@ -170,37 +172,6 @@ Future<dynamic> updateMsg(
       );
     }
 
-    Map? getChatData = await databaseTg.getChat(
-      chat_type: chat_type,
-      chat_id: auto_chat_user_id,
-      isSaveNotFound: false,
-      bot_user_id: bot_user_id,
-    );
-
-    if (getChatData == null) {
-      getChatData = {};
-      await databaseTg.saveChat(chat_type: chat_type, chat_id: auto_chat_user_id, newData: getChatData, bot_user_id: bot_user_id);
-    }
-
-    Map? getUserData = await databaseTg.getChat(
-      chat_type: chat_type,
-      chat_id: from_id,
-      isSaveNotFound: false,
-      bot_user_id: bot_user_id,
-    );
-
-    if (getUserData == null) {
-      getUserData = from;
-      if (chat_type == "private") {
-        await databaseTg.saveChat(
-          chat_type: chat_type,
-          chat_id: from_id,
-          newData: getUserData,
-          bot_user_id: bot_user_id,
-        );
-      }
-    }
-
     /// command
     if (msg_caption.isNotEmpty) {
       if (RegExp(r"^([!./])", caseSensitive: false).hasMatch(text)) {
@@ -209,7 +180,6 @@ Future<dynamic> updateMsg(
           bool isCommandSpace = (textCommand.split(" ").length > 1);
 
           if (RegExp(r"^test$", caseSensitive: false).hasMatch(textCommand)) {
-            print(await tg.getMeClients());
             return await tg.callApi(
               tdlibFunction: TdlibFunction.sendMessage(
                 chat_id: chat_id,
@@ -273,11 +243,79 @@ Future<dynamic> updateMsg(
       }
     }
 
-    /// handler userbot
-    if (is_login_bot) {}
+    /// handler bot
+    if (is_login_bot) {
+      Map? getChatData = await databaseTg.getChat(
+        chat_type: chat_type,
+        chat_id: auto_chat_user_id,
+        isSaveNotFound: false,
+        bot_user_id: bot_user_id,
+      );
+      if (getChatData == null) {
+        getChatData = {};
+        late Map get_me = {};
+        Map get_me_res = await tg.getMe(clientId: update.client_id);
+        if (get_me_res["ok"] == true && get_me_res["result"] is Map) {
+          get_me = get_me_res["result"];
+        }
+        get_me.forEach((key, value) {
+          if (getChatData != null) {
+            getChatData[key] = value;
+          }
+        });
+        await databaseTg.saveChat(chat_type: chat_type, chat_id: auto_chat_user_id, newData: getChatData, bot_user_id: bot_user_id);
+      }
+      Map? getUserData = await databaseTg.getChat(
+        chat_type: chat_type,
+        chat_id: from_id,
+        isSaveNotFound: false,
+        bot_user_id: bot_user_id,
+      );
+      if (getUserData == null) {
+        getUserData = from;
+        await databaseTg.saveChat(
+          chat_type: chat_type,
+          chat_id: from_id,
+          newData: getUserData,
+          bot_user_id: bot_user_id,
+        );
+      }
+      print(getChatData);
+      print(getUserData);
+    }
 
     /// handler userbot
-    if (!is_login_bot) {}
+    if (!is_login_bot) {
+      if (current_user_id == 0) {
+        return;
+      }
+      Map? userbot_data = await databaseTg.getData(
+        account_id: current_user_id,
+        databaseDataType: DatabaseDataType.userbot,
+      );
+
+      if (userbot_data == null) {
+        userbot_data = {};
+        late Map get_me = {};
+        Map get_me_res = await tg.getMe(clientId: update.client_id);
+        if (get_me_res["ok"] == true && get_me_res["result"] is Map) {
+          get_me = get_me_res["result"];
+        }
+        get_me.forEach((key, value) {
+          if (userbot_data != null) {
+            userbot_data[key] = value;
+          }
+        });
+        bool is_save = await databaseTg.saveData(
+          account_id: current_user_id,
+          newValue: userbot_data,
+          databaseDataType: DatabaseDataType.userbot,
+        );
+        if (!is_save) {
+          return;
+        }
+      }
+    }
   } catch (e) {
     parameters["text"] = e.toString();
     return await tg.request(

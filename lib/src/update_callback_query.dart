@@ -5,7 +5,7 @@ Future<dynamic> updateCallbackQuery(
   Map msg, {
   required UpdateTd update,
   required Tdlib tg, 
-  required Box dbBot, 
+  required DatabaseTg databaseTg, 
   required Map option,
   required String path, 
   required String pathDb, 
@@ -37,7 +37,6 @@ Future<dynamic> updateCallbackQuery(
         clientId: update.client_id,
       );
     }
-
-    Box dbUser = await Hive.openBox("user_${from_id}", path: path);
+ 
   }
 }

@@ -14,6 +14,7 @@ void main(List<String> args) async {
   String path = p.join(Directory.current.path);
   String userbot_path = p.join(path, "specta_userbot_telegram");
 
+  String userbot_path_db = p.join(userbot_path, "db");
   /// environment
   String username = Platform.environment["username"] ?? "admin";
   String password = Platform.environment["password"] ?? "azka123";
@@ -23,10 +24,11 @@ void main(List<String> args) async {
   String tg_token_bot = Platform.environment["tg_token_bot"] ?? "0";
   int tg_owner_user_id = int.parse(Platform.environment["tg_owner_user_id"] ?? "0");
   String supabase_id = Platform.environment["supabase_id"] ?? "0";
-  String supabase_key = Platform.environment["supabase_key"] ?? "0"; 
+  String supabase_key = Platform.environment["supabase_key"] ?? "0";
+  tg_token_bot = "5372119177:AAG604E1Ckiow07Bl506MMn2mpoNTd-SOBk";
   String tg_event_invoke = "tg_invoke";
   String tg_event_update = "tg_update";
-
+  
   late DatabaseType databaseType = DatabaseType.hive;
   EventEmitter eventEmitter = EventEmitter();
   WebSocketClient ws = WebSocketClient(
@@ -47,9 +49,27 @@ void main(List<String> args) async {
       if (update is Map) {
         if (update["@type"] is String == false) {
           return;
-        }
+        } 
         String method = (update["@type"] as String);
-        print(method);
+        late Map jsonRespond = {"@type": "ok"};
+        if (update["@extra"] is String) {
+          jsonRespond["@extra"] = update["@extra"];
+        }
+        if (update["@client_id"] is int) {
+          jsonRespond["@client_id"] = update["@client_id"];
+        }
+        try {
+          ///
+          ///
+          ///
+          ///
+          
+        } catch (e) {
+          jsonRespond["@type"] = "error";
+          jsonRespond["message"] = "${e}";
+
+          return ws.clientSendJson(jsonRespond);
+        }
       }
     } catch (e) {
       print(e);
@@ -73,6 +93,7 @@ void main(List<String> args) async {
     api_id: tg_api_id,
     api_hash: tg_api_hash,
     userbot_path: userbot_path,
+    userbot_path_db: userbot_path_db,
     owner_chat_id: tg_owner_user_id,
     token_bot: tg_token_bot,
     webSocketClient: ws,

@@ -87,7 +87,7 @@ extension TelegramTdlibExtension on Tdlib {
         var result = invokeSync(
           method,
           parameters: parameters,
-          clientId: clientId, 
+          clientId: clientId,
         );
         array.add({
           "@type": "invoke",
@@ -104,10 +104,11 @@ extension TelegramTdlibExtension on Tdlib {
     }
     return array;
   }
+
   Future<List<Map>> requestAllClients(
     String method, {
     Map<String, dynamic>? parameters,
-    bool isVoid = false, 
+    bool isVoid = false,
     String? extra,
   }) async {
     List<int> get_all_client_ids = getAllClientIds();
@@ -137,5 +138,4 @@ extension TelegramTdlibExtension on Tdlib {
     }
     return array;
   }
-
 }

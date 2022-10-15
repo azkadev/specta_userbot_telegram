@@ -28,6 +28,7 @@ Future<void> userbot({
   required int api_id,
   required String api_hash,
   required String userbot_path,
+  required String userbot_path_db,
   String? pathTdlib,
   String? databaseKey,
   required dynamic owner_chat_id,
@@ -44,7 +45,6 @@ Future<void> userbot({
   databaseKey ??= "";
   clientOption ??= {};
   pathTdlib ??= "./libtdjson.so";
-  String userbot_path_db = p.join(userbot_path, "db");
   Directory userbot_dir = Directory(userbot_path);
   if (!userbot_dir.existsSync()) {
     userbot_dir.createSync(recursive: true);
@@ -90,6 +90,12 @@ Future<void> userbot({
       if (update.raw.isEmpty) {
         return;
       }
+      late bool is_login_bot = false;
+
+      if (update.client_option["is_login_bot"] == true) {
+        is_login_bot = update.client_option["is_login_bot"] as bool;
+      }
+
       int bot_user_id = parserBotUserIdFromToken(update.client_option["token_bot"]);
       int current_user_id = 0;
       if (update.client_option["id"] is int) {
@@ -104,6 +110,7 @@ Future<void> userbot({
             update.client_option["database_key"] = databaseKey;
             await tg.initClient(update, clientId: update.client_id, tdlibParameters: update.client_option, isVoid: true);
           } else {
+            update.client_option["database_key"] = databaseKey;
             await tg.initClient(update, clientId: update.client_id, tdlibParameters: update.client_option, isVoid: true);
           }
           if (authStateType == "authorizationStateLoggingOut") {}
@@ -144,7 +151,9 @@ Future<void> userbot({
             supabase_db: databaseLib.supabase_db,
             hive_db: dbBot,
           ),
-          path: userbot_path,
+          directory: Directory(
+            userbot_path_db,
+          ),
         );
         if (update.raw["@type"] == "updateNewInlineQuery") {
           Map? msg = await apiUpdateInlineQuery(update, tg: tg);
@@ -169,7 +178,7 @@ Future<void> userbot({
               msg,
               update: update,
               tg: tg,
-              dbBot: dbBot,
+              databaseTg: databaseTg,
               option: option,
               path: userbot_path,
               pathDb: userbot_path_db,
@@ -200,6 +209,8 @@ Future<void> userbot({
                 path: userbot_path,
                 pathDb: userbot_path_db,
                 bot_user_id: bot_user_id,
+                current_user_id: current_user_id,
+                is_login_bot: is_login_bot,
               );
             }
           }

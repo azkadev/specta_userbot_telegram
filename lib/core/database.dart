@@ -1,4 +1,4 @@
-// ignore_for_file: non_constant_identifier_names, empty_catches
+// ignore_for_file: non_constant_identifier_names, empty_catches, unnecessary_brace_in_string_interps
 
 part of specta_userbot_telegram;
 
@@ -173,6 +173,8 @@ class DefaultDataBase {
 
 enum DatabaseType { supabase, hive }
 
+enum DatabaseDataType { bot, userbot }
+
 class DatabaseLib {
   late DatabaseType databaseType;
   late Database supabase_db;
@@ -186,11 +188,98 @@ class DatabaseLib {
 
 class DatabaseTg {
   late DatabaseLib databaseLib;
-  late String path;
+  late Directory directory;
   DatabaseTg({
     required this.databaseLib,
-    required this.path,
+    required this.directory,
   });
+
+  Directory getDirectory({DatabaseDataType databaseDataType = DatabaseDataType.bot}) {
+    Directory dir = Directory(p.join(directory.path, databaseDataType.name));
+    if (!dir.existsSync()) {
+      dir.createSync(recursive: true);
+    }
+    return dir;
+  }
+
+  Future<Map?> getData({
+    required int account_id,
+    required DatabaseDataType databaseDataType,
+    bool isSaveNotFound = true,
+    Map? value,
+    String from = "telegram",
+  }) async {
+    value ??= {};
+    if (databaseLib.databaseType == DatabaseType.supabase) {
+      Map? get_data = await databaseLib.supabase_db.getMatch(from: from, query: {
+        "id": account_id,
+      });
+      if (get_data == null) {
+        if (isSaveNotFound) {
+          Map new_data = {};
+          try {
+            new_data.addAll(value);
+          } catch (e) {
+            value.forEach((key, value) {
+              new_data[key] = value;
+            });
+          }
+          await saveData(account_id: account_id, databaseDataType: databaseDataType, newValue: value);
+        } else {
+          return null;
+        }
+        return null;
+      }
+      return get_data;
+    }
+    if (databaseLib.databaseType == DatabaseType.hive) {
+      Directory dir = getDirectory(databaseDataType: databaseDataType);
+      Box box = await Hive.openBox("${account_id}", path: dir.path);
+      if (box.isEmpty) {
+        if (isSaveNotFound) {
+          late Map get_data = box.toMap();
+          try {
+            get_data.addAll(value);
+          } catch (e) {
+            value.forEach((key, value) {
+              get_data[key] = value;
+            });
+          }
+          await saveData(account_id: account_id, databaseDataType: databaseDataType, newValue: value);
+          return get_data;
+        } else {
+          return null;
+        }
+      }
+      return box.toMap();
+    }
+    return null;
+  }
+
+  Future<bool> saveData({
+    required int account_id,
+    required DatabaseDataType databaseDataType,
+    required Map newValue,
+    String from = "telegram",
+  }) async {
+    if (databaseLib.databaseType == DatabaseType.supabase) {
+      await databaseLib.supabase_db.update(
+        from: from,
+        dataOrigin: {
+          "id": account_id,
+        },
+        dataUpdate: newValue,
+      );
+      return true;
+    }
+    if (databaseLib.databaseType == DatabaseType.hive) {
+      Directory dir = getDirectory(databaseDataType: databaseDataType);
+      Box box = await Hive.openBox("${account_id}", path: dir.path);
+      box.putAll(newValue);
+      return true;
+    }
+    return false;
+  }
 
   Future<List<Map>> getAlls({String from = "telegram"}) async {
     if (databaseLib.databaseType == DatabaseType.supabase) {
@@ -198,7 +287,7 @@ class DatabaseTg {
       return es;
     }
     if (databaseLib.databaseType == DatabaseType.hive) {
-      Directory dir = Directory(path);
+      Directory dir = getDirectory();
       List<FileSystemEntity> dirs = dir.listSync();
       List<String> array = [];
       for (var i = 0; i < dirs.length; i++) {
