@@ -29,7 +29,7 @@
 > belum siap di run public
 
 ## Status script
-> semua sudah selesai dan sudah di test di private namun belum di publish ke github ( lagi mikirin style code agar mudah di develop  )
+> semua sudah selesai dan sudah di test di private namun belum di publish ke github ( lagi mikirin style code agar mudah di develop semua orang )
 
 ---
 ## run
