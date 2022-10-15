@@ -23,11 +23,10 @@ void main(List<String> args) async {
   String tg_token_bot = Platform.environment["tg_token_bot"] ?? "0";
   int tg_owner_user_id = int.parse(Platform.environment["tg_owner_user_id"] ?? "0");
   String supabase_id = Platform.environment["supabase_id"] ?? "0";
-  String supabase_key = Platform.environment["supabase_key"] ?? "0";
-  tg_token_bot = "5372119177:AAG604E1Ckiow07Bl506MMn2mpoNTd-SOBk";
+  String supabase_key = Platform.environment["supabase_key"] ?? "0"; 
   String tg_event_invoke = "tg_invoke";
   String tg_event_update = "tg_update";
-  
+
   late DatabaseType databaseType = DatabaseType.hive;
   EventEmitter eventEmitter = EventEmitter();
   WebSocketClient ws = WebSocketClient(

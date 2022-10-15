@@ -14,6 +14,8 @@ import "package:galaxeus_ai_dart/galaxeus_ai_dart.dart" as galaxeus_ai;
 
 part 'core/database.dart';
 
+part 'extensions/telegram.dart';
+
 part "scheme/update_callback_query.dart";
 part "scheme/update_inline_query.dart";
 part "scheme/update_msg.dart";

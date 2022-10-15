@@ -209,6 +209,7 @@ Future<dynamic> updateMsg(
           bool isCommandSpace = (textCommand.split(" ").length > 1);
 
           if (RegExp(r"^test$", caseSensitive: false).hasMatch(textCommand)) {
+            print(await tg.getMeClients());
             return await tg.callApi(
               tdlibFunction: TdlibFunction.sendMessage(
                 chat_id: chat_id,
@@ -276,10 +277,7 @@ Future<dynamic> updateMsg(
     if (is_login_bot) {}
 
     /// handler userbot
-    if (!is_login_bot) {
-        
-    }
-
+    if (!is_login_bot) {}
   } catch (e) {
     parameters["text"] = e.toString();
     return await tg.request(
