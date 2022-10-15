@@ -173,11 +173,11 @@ class DefaultDataBase {
 
 enum DatabaseType { supabase, hive }
 
-class DatabaseLib { 
+class DatabaseLib {
   late DatabaseType databaseType;
   late Database supabase_db;
   late Box hive_db;
-  DatabaseLib({ 
+  DatabaseLib({
     required this.databaseType,
     required this.supabase_db,
     required this.hive_db,

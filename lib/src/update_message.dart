@@ -8,7 +8,7 @@ Future<dynamic> updateMsg(
   required String path,
   required UpdateTd update,
   required Tdlib tg,
-  required Box dbBot,
+  required DatabaseTg databaseTg,
   required String pathDb,
   required int bot_user_id,
 }) async {
@@ -24,7 +24,7 @@ Future<dynamic> updateMsg(
     text = msg["text"];
   }
   var isOutgoing = false;
-  late String chatType = "";
+  late String chat_type = "";
   if (msg["is_outgoing"] is bool) {
     isOutgoing = msg["is_outgoing"];
   }
@@ -32,14 +32,18 @@ Future<dynamic> updateMsg(
     return null;
   }
   if (msg["chat"]["type"] is String && (msg["chat"]["type"] as String).isNotEmpty) {
-    chatType = msg["chat"]["type"];
-    chatType = chatType.replaceAll(RegExp(r"super", caseSensitive: false), "");
+    chat_type = msg["chat"]["type"];
+    chat_type = chat_type.replaceAll(RegExp(r"super", caseSensitive: false), "");
   } else {
     return null;
   }
-  var isAdmin = false;
-  var chat_id = msg["chat"]["id"];
-  var from_id = msg["from"]["id"];
+
+  late bool isAdmin = false;
+  int chat_id = msg["chat"]["id"];
+  int from_id = msg["from"]["id"];
+  Map chat = msg["chat"];
+  Map from = msg["from"];
+  int auto_chat_user_id = 0;
 
   if (tg.client_id != update.client_id) {
     if (isOutgoing) {
@@ -159,11 +163,40 @@ Future<dynamic> updateMsg(
         clientId: update.client_id,
       );
     }
-    
+
+    Map? getChatData = await databaseTg.getChat(
+      chat_type: chat_type,
+      chat_id: auto_chat_user_id,
+      isSaveNotFound: false,
+      bot_user_id: bot_user_id,
+    );
+
+    if (getChatData == null) {
+      getChatData = {};
+      await databaseTg.saveChat(chat_type: chat_type, chat_id: auto_chat_user_id, newData: getChatData, bot_user_id: bot_user_id);
+    }
+
+    Map? getUserData = await databaseTg.getChat(
+      chat_type: chat_type,
+      chat_id: from_id,
+      isSaveNotFound: false,
+      bot_user_id: bot_user_id,
+    );
+
+    if (getUserData == null) {
+      getUserData = from;
+      if (chat_type == "private") {
+        await databaseTg.saveChat(
+          chat_type: chat_type,
+          chat_id: from_id,
+          newData: getUserData,
+          bot_user_id: bot_user_id,
+        );
+      }
+    }
 
     /// command
     if (msg_caption.isNotEmpty) {
-  
       if (RegExp(r"^([!./])", caseSensitive: false).hasMatch(text)) {
         String textCommand = text.replaceAll(RegExp(r"^([!./])([ ]+)?", caseSensitive: false), "");
         if (textCommand.isNotEmpty) {

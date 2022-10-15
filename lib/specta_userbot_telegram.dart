@@ -192,7 +192,7 @@ Future<void> userbot({
                 msg,
                 update: update,
                 tg: tg,
-                dbBot: dbBot,
+                databaseTg: databaseTg,
                 path: userbot_path,
                 pathDb: userbot_path_db,
                 bot_user_id: bot_user_id,
