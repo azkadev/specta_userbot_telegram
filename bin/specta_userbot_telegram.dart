@@ -4,12 +4,15 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:galaxeus_lib/galaxeus_lib.dart';
+import 'package:hive/hive.dart';
 import 'package:specta_userbot_telegram/specta_userbot_telegram.dart';
 import 'package:path/path.dart' as p;
+import 'package:supabase_client/supabase.dart';
 import 'package:telegram_client/tdlib/tdlib.dart';
 
 void main(List<String> args) async {
   String path = p.join(Directory.current.path);
+  String userbot_path = p.join(path, "specta_userbot_telegram");
 
   /// environment
   String username = Platform.environment["username"] ?? "admin";
@@ -19,14 +22,24 @@ void main(List<String> args) async {
   String tg_api_hash = Platform.environment["tg_api_hash"] ?? "0";
   String tg_token_bot = Platform.environment["tg_token_bot"] ?? "0";
   int tg_owner_user_id = int.parse(Platform.environment["tg_owner_user_id"] ?? "0");
-
+  String supabase_id = Platform.environment["supabase_id"] ?? "0";
+  String supabase_key = Platform.environment["supabase_key"] ?? "0"; 
   String tg_event_invoke = "tg_invoke";
   String tg_event_update = "tg_update";
+
+  late DatabaseType databaseType = DatabaseType.hive;
   EventEmitter eventEmitter = EventEmitter();
   WebSocketClient ws = WebSocketClient(
     host_name,
     eventEmitter: eventEmitter,
     eventNameUpdate: "socket_update",
+  );
+  Database supabase_db = Database(supabase_id, supabase_key);
+  Box hive_db = await Hive.openBox("main", path: userbot_path);
+  DatabaseLib databaseLib = DatabaseLib(
+    databaseType: databaseType,
+    supabase_db: supabase_db,
+    hive_db: hive_db,
   );
   late Tdlib tg;
   Listener listener_websocket_update = ws.on(ws.event_name_update, (update) {
@@ -59,13 +72,14 @@ void main(List<String> args) async {
   await userbot(
     api_id: tg_api_id,
     api_hash: tg_api_hash,
-    path: path,
+    userbot_path: userbot_path,
     owner_chat_id: tg_owner_user_id,
     token_bot: tg_token_bot,
     webSocketClient: ws,
     eventEmitter: eventEmitter,
     event_invoke: tg_event_invoke,
     event_update: tg_event_update,
+    databaseLib: databaseLib,
     onInit: (Tdlib tg_callback) {
       tg = tg_callback;
     },

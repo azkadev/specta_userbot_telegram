@@ -7,8 +7,11 @@ import 'dart:io';
 
 import 'package:galaxeus_lib/galaxeus_lib.dart';
 import 'package:hive/hive.dart';
+import 'package:supabase_client/supabase.dart';
 import 'package:telegram_client/telegram_client.dart';
 import 'package:path/path.dart' as p;
+
+part 'core/database.dart';
 
 part "scheme/update_callback_query.dart";
 part "scheme/update_inline_query.dart";
@@ -18,11 +21,26 @@ part "src/update_callback_query.dart";
 part "src/update_inline_query.dart";
 part "src/update_message.dart";
 
-Future<void> userbot({required int api_id, required String api_hash, required String path, String? pathTdlib, String? databaseKey, required dynamic owner_chat_id, Map? clientOption, int? log_chat_id, required String token_bot, required WebSocketClient webSocketClient, required EventEmitter eventEmitter, String event_invoke = "invoke", String event_update = "update", required void Function(Tdlib tdlib) onInit}) async {
+Future<void> userbot({
+  required int api_id,
+  required String api_hash,
+  required String userbot_path,
+  String? pathTdlib,
+  String? databaseKey,
+  required dynamic owner_chat_id,
+  Map? clientOption,
+  int? log_chat_id,
+  required String token_bot,
+  required WebSocketClient webSocketClient,
+  required EventEmitter eventEmitter,
+  required DatabaseLib databaseLib,
+  String event_invoke = "invoke",
+  String event_update = "update",
+  required void Function(Tdlib tdlib) onInit,
+}) async {
   databaseKey ??= "";
   clientOption ??= {};
   pathTdlib ??= "./libtdjson.so";
-  String userbot_path = p.join(path, "db_specta_userbot");
   String userbot_path_db = p.join(userbot_path, "db");
   Directory userbot_dir = Directory(userbot_path);
   if (!userbot_dir.existsSync()) {
@@ -70,7 +88,10 @@ Future<void> userbot({required int api_id, required String api_hash, required St
         return;
       }
       int bot_user_id = parserBotUserIdFromToken(update.client_option["token_bot"]);
-
+      int current_user_id = 0;
+      if (update.client_option["id"] is int) {
+        current_user_id = update.client_option["id"];
+      } 
       /// authorization update
       if (update.raw["@type"] == "updateAuthorizationState") {
         if (update.raw["authorization_state"] is Map) {
@@ -113,6 +134,14 @@ Future<void> userbot({required int api_id, required String api_hash, required St
       List<String> updateOnly = ["updateNewMessage", "updateNewInlineQuery", "updateNewCallbackQuery", "updateNewInlineCallbackQuery"];
       if (updateOnly.contains(update.raw["@type"])) {
         Box dbBot = await Hive.openBox("${bot_user_id}", path: userbot_path_db);
+        DatabaseTg databaseTg = DatabaseTg(
+          databaseLib: DatabaseLib(
+            databaseType: databaseLib.databaseType,
+            supabase_db: databaseLib.supabase_db,
+            hive_db: dbBot,
+          ),
+          path: userbot_path,
+        );
         if (update.raw["@type"] == "updateNewInlineQuery") {
           Map? msg = await apiUpdateInlineQuery(update, tg: tg);
           if (msg != null && msg.isNotEmpty) {
@@ -122,7 +151,7 @@ Future<void> userbot({required int api_id, required String api_hash, required St
               tg: tg,
               dbBot: dbBot,
               option: option,
-              path: path,
+              path: userbot_path,
               pathDb: userbot_path_db,
               bot_user_id: bot_user_id,
             );
@@ -138,7 +167,7 @@ Future<void> userbot({required int api_id, required String api_hash, required St
               tg: tg,
               dbBot: dbBot,
               option: option,
-              path: path,
+              path: userbot_path,
               pathDb: userbot_path_db,
               bot_user_id: bot_user_id,
             );
@@ -164,7 +193,7 @@ Future<void> userbot({required int api_id, required String api_hash, required St
                 update: update,
                 tg: tg,
                 dbBot: dbBot,
-                path: path,
+                path: userbot_path,
                 pathDb: userbot_path_db,
                 bot_user_id: bot_user_id,
               );

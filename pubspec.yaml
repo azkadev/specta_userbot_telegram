@@ -18,5 +18,6 @@ dependencies:
   galaxeus: ^0.0.5
   galaxeus_lib: ^0.0.17
   hive: ^2.2.3
-  path: ^1.8.2
-  telegram_client: ^0.3.58
+  path: ^1.8.2 
+  supabase_client: ^0.0.9
+  telegram_client: ^0.3.60
