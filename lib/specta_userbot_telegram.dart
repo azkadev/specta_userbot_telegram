@@ -10,6 +10,7 @@ import 'package:hive/hive.dart';
 import 'package:supabase_client/supabase.dart';
 import 'package:telegram_client/telegram_client.dart';
 import 'package:path/path.dart' as p;
+import "package:galaxeus_ai_dart/galaxeus_ai_dart.dart" as galaxeus_ai;
 
 part 'core/database.dart';
 
@@ -91,7 +92,8 @@ Future<void> userbot({
       int current_user_id = 0;
       if (update.client_option["id"] is int) {
         current_user_id = update.client_option["id"];
-      } 
+      }
+
       /// authorization update
       if (update.raw["@type"] == "updateAuthorizationState") {
         if (update.raw["authorization_state"] is Map) {

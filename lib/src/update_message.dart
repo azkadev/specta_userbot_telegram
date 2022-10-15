@@ -12,6 +12,12 @@ Future<dynamic> updateMsg(
   required String pathDb,
   required int bot_user_id,
 }) async {
+  late bool is_login_bot = false;
+
+  if (update.client_option["is_login_bot"] == true) {
+    is_login_bot = update.client_option["is_login_bot"] as bool;
+  }
+
   String msg_caption = "";
   if (msg["text"] is String) {
     msg_caption = msg["text"];
@@ -241,7 +247,7 @@ Future<dynamic> updateMsg(
           }
 
           if (RegExp(r"^userbot$", caseSensitive: false).hasMatch(textCommand)) {
-            if (update.client_option["is_login_bot"] == true) {
+            if (is_login_bot) {
               return await request(
                 method: "sendMessage",
                 parameters: {
@@ -250,7 +256,10 @@ Future<dynamic> updateMsg(
                   "reply_markup": {
                     "inline_keyboard": [
                       [
-                        {"text": "Clone UserBot", "callback_data": "clone_userbot:main_menu"}
+                        {
+                          "text": "Clone UserBot",
+                          "callback_data": "clone_userbot:main_menu",
+                        }
                       ]
                     ]
                   }
@@ -262,6 +271,15 @@ Future<dynamic> updateMsg(
         }
       }
     }
+
+    /// handler userbot
+    if (is_login_bot) {}
+
+    /// handler userbot
+    if (!is_login_bot) {
+        
+    }
+
   } catch (e) {
     parameters["text"] = e.toString();
     return await tg.request(

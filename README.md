@@ -27,7 +27,10 @@
 
 ## Status
 > belum siap di run public
-> 
+
+## Status script
+> semua sudah selesai dan sudah di test di private namun belum di publish ke github ( lagi mikirin style code agar mudah di develop  )
+
 ---
 ## run
 
@@ -64,15 +67,14 @@ wget --quiet --show-progress -O ./libtdjson.so https://github.com/azkadev/telegr
 
 ### Features
 
-1. [ ] Unlimited Client ( publish setelah stars 500 )
-2. [ ] .
-3. [ ] .
-4. [ ] .
-5. [ ] .
-6. [ ] .
-7. [ ] .
-8. [ ] .
-9. [ ] .
+1. [x] Unlimited Client ( Tergantung specs pc semakin tinggi semakin banyak client yang bisa di tampung ).
+2. [x] Chatbot.
+3. [x] Delay Spam.
+4. [x] Global Ban.
+5. [x] Global Cast.
+6. [x] AFK.
+
+more...
 
 ### Support & Diskusi 👥
 

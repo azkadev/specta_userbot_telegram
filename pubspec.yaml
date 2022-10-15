@@ -16,6 +16,7 @@ dev_dependencies:
   test: ^1.16.0
 dependencies:
   galaxeus: ^0.0.5
+  galaxeus_ai_dart: ^0.0.1
   galaxeus_lib: ^0.0.17
   hive: ^2.2.3
   path: ^1.8.2 
