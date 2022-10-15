@@ -35,7 +35,7 @@
 [![Contributors](https://img.shields.io/github/contributors/azkadev/specta_userbot_telegram?style=flat-square&color=green)](https://github.com/azkadev/specta_userbot_telegram/graphs/contributors)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](https://makeapullrequest.com)
 [![License](https://img.shields.io/badge/License-AGPL-blue)](https://github.com/azkadev/specta_userbot_telegram/blob/main/LICENSE)   
-[![Sparkline](https://stars.medv.io/azkadev/specta_userbot_telegram.svg)](https://stars.medv.io/azkadev/specta_userbot_telegram)
+<!-- [![Sparkline](https://stars.medv.io/azkadev/specta_userbot_telegram.svg)](https://stars.medv.io/azkadev/specta_userbot_telegram) -->
 ----
 
 ## Demo / Quick overview
