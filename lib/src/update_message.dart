@@ -178,20 +178,7 @@ Future<dynamic> updateMsg(
         String textCommand = text.replaceAll(RegExp(r"^([!./])([ ]+)?", caseSensitive: false), "");
         if (textCommand.isNotEmpty) {
           bool isCommandSpace = (textCommand.split(" ").length > 1);
-
-          if (RegExp(r"^test$", caseSensitive: false).hasMatch(textCommand)) {
-            return await tg.callApi(
-              tdlibFunction: TdlibFunction.sendMessage(
-                chat_id: chat_id,
-                input_message_content: TdlibFunction.inputMessageText(
-                  text: TdlibFunction.formattedText(
-                    text: "Hello World",
-                  ),
-                ),
-              ),
-              clientId: update.client_id,
-            );
-          }
+ 
 
           /// ping comand
           if (RegExp(r"^ping$", caseSensitive: false).hasMatch(textCommand)) {
