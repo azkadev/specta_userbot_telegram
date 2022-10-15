@@ -25,7 +25,6 @@ void main(List<String> args) async {
   int tg_owner_user_id = int.parse(Platform.environment["tg_owner_user_id"] ?? "0");
   String supabase_id = Platform.environment["supabase_id"] ?? "0";
   String supabase_key = Platform.environment["supabase_key"] ?? "0";
-  tg_token_bot = "5372119177:AAG604E1Ckiow07Bl506MMn2mpoNTd-SOBk";
   String tg_event_invoke = "tg_invoke";
   String tg_event_update = "tg_update";
   
